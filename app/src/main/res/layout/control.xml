@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <CheckBox
+        android:id="@+id/checkBox_Balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Balance L/R" />
+
+    <SeekBar
+        android:id="@+id/seekBar_main"
+        style="@style/MyCustomProgressStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/checkBox_Balance"
+        android:max="63"
+        android:progress="30" />
+
+    <TextView
+        android:id="@+id/textView_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/seekBar_main"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="---"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <SeekBar
+        android:id="@+id/seekBar_mainRight"
+        style="@style/MyCustomProgressStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/seekBar_main" />
+
+    <TextView
+        android:id="@+id/textView_levelRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/seekBar_mainRight"
+        android:text="---"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

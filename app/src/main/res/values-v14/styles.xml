@@ -1,0 +1,20 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme for API 14+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 14+ devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Holo">
+        <!-- API 14 theme customizations can go here. -->
+    </style>
+	<style name="MyCustomProgressStyle" parent="android:Theme.Holo">
+	    <item name="android:indeterminateOnly">false</item>
+    	<item name="android:progressDrawable">@drawable/progress_horizontal_holo_dark</item>
+   		<item name="android:indeterminateDrawable">@drawable/progress_horizontal_holo_dark</item>
+   		<item name="android:thumb">@drawable/scrubber_control_selector_holo</item>
+    	<item name="android:minHeight">50dip</item>
+    	<item name="android:maxHeight">50dip</item>
+    	<item name="android:thumbOffset">0dip</item>
+	</style>
+</resources>

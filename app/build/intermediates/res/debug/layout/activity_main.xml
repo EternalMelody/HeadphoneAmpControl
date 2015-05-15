@@ -1,0 +1,122 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical" >
+
+    <LinearLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".MainActivity" >
+
+        <fragment
+            android:id="@+id/main_fragment"
+            android:name="com.marioandhika.headphoneampcontrol.MainFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/control" />
+
+        <TextView
+            android:id="@+id/textView_minLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Min level: " />
+
+        <SeekBar
+            android:id="@+id/seekBar_minLevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="63" />
+
+        <SeekBar
+            android:id="@+id/seekBar_maxLevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="63" />
+						 
+        <TextView
+            android:id="@+id/textView_maxLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Max level: " />
+
+        <CheckBox
+            android:id="@+id/checkBox_toggleService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toggle service (notification bar shortcut)" />
+
+        <CheckBox
+            android:id="@+id/checkBox_VolumeButtonHack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toggle volume button hack" />
+
+        <SeekBar
+            android:id="@+id/seekBar_VolumeButtonHack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="4"/>
+
+        <TextView
+            android:id="@+id/textView_VolumeButtonHack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+        <CheckBox
+            android:id="@+id/checkBox_musicHack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hack music volume" 
+            android:checked="true"/>
+
+        <CheckBox
+            android:id="@+id/checkBox_voiceCallHack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hack voice call volume"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/checkBox_ringHack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hack ring volume" />
+
+        <CheckBox
+            android:id="@+id/checkBox_toggleSafetyLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enable safety level" />
+
+        <SeekBar
+            android:id="@+id/seekBar_safetyLevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="63" />
+
+        <TextView
+            android:id="@+id/textView_safetyLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Safety level: " />
+
+        <Button
+            android:id="@+id/button_commitChanges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apply level limits"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</ScrollView><!-- From: file:/Users/marioandhika/AndroidStudioProjects/HeadphoneAmpControl/app/src/main/res/layout/activity_main.xml -->
