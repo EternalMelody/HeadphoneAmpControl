@@ -13,16 +13,11 @@ public class MainReceiver extends BroadcastReceiver {
 	public static final int UNPLUGGED = 0;
 	public static final int PLUGGED = 1;
 	public static final int UNALTERED = 2;
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-		boolean isPlugged;
-		if (intent.getIntExtra("state", UNPLUGGED) == 0) {
-			isPlugged = false;
-		} else {
-			isPlugged = true;
-		}
+		boolean isPlugged = intent.getIntExtra("state", UNPLUGGED) != 0;
 
 		// Update service based on headset status
 		Intent service = new Intent(context, MainService.class);

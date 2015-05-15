@@ -43,8 +43,8 @@ public class DialogActivity extends Activity {
 	 */
 	public static final String ACTION_REFRESH_HEADPHONE_LEVEL_SEEKBAR = "action_refresh_headphone_level_seekbar";
 
-	private MainFragment mf;
-	private VolumeChangeReceiver receiver;
+	private MainFragment mainFragment;
+	private VolumeChangeReceiver volumeChangeReceiver;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class DialogActivity extends Activity {
 
 		// Get main fragment
 		FragmentManager fm = getFragmentManager();
-		mf = (MainFragment) fm.findFragmentById(R.id.main_fragment);
+		mainFragment = (MainFragment) fm.findFragmentById(R.id.main_fragment);
 
 		// Check what action started this activity
 		int decreaseOrIncrease = getIntent().getIntExtra(DECREASE_OR_INCREASE, NEITHER);
@@ -74,14 +74,14 @@ public class DialogActivity extends Activity {
 		if (decreaseOrIncrease != NEITHER) {
 			IntentFilter filter = new IntentFilter();
 			filter.addAction(ACTION_REFRESH_HEADPHONE_LEVEL_SEEKBAR);
-			receiver = new VolumeChangeReceiver();
-			registerReceiver(receiver, filter);
+			volumeChangeReceiver = new VolumeChangeReceiver();
+			registerReceiver(volumeChangeReceiver, filter);
 		}
 	}
-	
-	public void onDestroy(){
-		if (receiver != null){
-			unregisterReceiver(receiver);
+
+	public void onDestroy() {
+		if (volumeChangeReceiver != null) {
+			unregisterReceiver(volumeChangeReceiver);
 		}
 		super.onDestroy();
 	}
@@ -93,9 +93,9 @@ public class DialogActivity extends Activity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			mf.rebuildSeekbar();
-			mf.resetTimer();
+			mainFragment.rebuildSeekbar();
+			mainFragment.resetTimer();
 		}
-		
+
 	}
 }

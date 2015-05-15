@@ -19,24 +19,24 @@ import android.widget.TextView;
 /**
  * Fragment that contains the main volume seekbars
  */
-public class MainFragment extends Fragment implements OnSeekBarChangeListener, OnCheckedChangeListener{
+public class MainFragment extends Fragment implements OnSeekBarChangeListener, OnCheckedChangeListener {
 
-	/**
-	 * Application instance
-	 */
-	private HeadphoneAmpControl headphoneAmpControl = (HeadphoneAmpControl)getActivity().getApplication();
+	private HeadphoneAmpControl headphoneAmpControl = (HeadphoneAmpControl) getActivity().getApplication();
 
+	// Views
 	private TextView textViewLevel;
 	private SeekBar seekBarMain;
-
-	private Handler idleKillTimer; // Handles idle kill timer
-	private IdleTimer idleTimerRunnable; // Runnable to kill activity
-	
-	private int minLevel; // User preferred minimum volume
-	private int maxLevel; // User preferred maximum volume
 	private SeekBar seekBarMainRight;
 	private TextView textViewLevelRight;
-	private boolean isBalanced; // User preferred volume balance
+
+	// User preferred minimum volume
+	private int minLevel;
+
+	// User preferred maximum volume
+	private int maxLevel;
+
+	// User preferred volume balance
+	private boolean isBalanced;
 
 	/**
 	 * Minimum value for volume level set by the kernel
@@ -49,15 +49,18 @@ public class MainFragment extends Fragment implements OnSeekBarChangeListener, O
 	public static final int MAX_LEVEL = 63;
 	public static final int LEVEL_OFFSET = -57;
 
+	// Handler and runnable to handle activity killing after certain time. Also see FINISH_DELAY
+	private Handler idleKillTimer; // Handles idle kill timer
+	private IdleTimer idleTimerRunnable; // Runnable to kill activity
+
 	/**
 	 * Longest user idle time before killing activity.
 	 */
 	public static final long FINISH_DELAY = 2000L;
-	
-	
+
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-        Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState) {
 
 		// Retrieve preferences
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -67,8 +70,8 @@ public class MainFragment extends Fragment implements OnSeekBarChangeListener, O
 		View v = inflater.inflate(R.layout.control, container, false);
 		textViewLevel = (TextView) v.findViewById(R.id.textView_level);
 		textViewLevelRight = (TextView) v.findViewById(R.id.textView_levelRight);
-		seekBarMain= (SeekBar) v.findViewById(R.id.seekBar_main);
-		seekBarMainRight= (SeekBar) v.findViewById(R.id.seekBar_mainRight);
+		seekBarMain = (SeekBar) v.findViewById(R.id.seekBar_main);
+		seekBarMainRight = (SeekBar) v.findViewById(R.id.seekBar_mainRight);
 		CheckBox checkBoxBalance = (CheckBox) v.findViewById(R.id.checkBox_Balance);
 		checkBoxBalance.setChecked(isBalanced);
 
@@ -85,23 +88,23 @@ public class MainFragment extends Fragment implements OnSeekBarChangeListener, O
 		if (getActivity().getClass() == DialogActivity.class) {
 			idleKillTimer.postDelayed(idleTimerRunnable, FINISH_DELAY);
 		}
-		
-        return v;
-    }
+
+		return v;
+	}
 
 	/**
 	 * Rebuild main seekbars with values from the system files and preferences
 	 */
-	public void rebuildSeekbar(){
+	public void rebuildSeekbar() {
 		headphoneAmpControl.getLevelsFromFile();
 		int currentLevelL = headphoneAmpControl.getCurrentLevelL();
 		int currentLevelR = headphoneAmpControl.getCurrentLevelR();
-		
+
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		minLevel = sp.getInt(MainActivity.SEEKBAR_MIN_LEVEL, MIN_LEVEL);
 		maxLevel = sp.getInt(MainActivity.SEEKBAR_MAX_LEVEL, MAX_LEVEL);
-		
-		seekBarMain.setMax(maxLevel-minLevel);
+
+		seekBarMain.setMax(maxLevel - minLevel);
 		seekBarMainRight.setMax(maxLevel - minLevel);
 
 		// Enforce safety levels
@@ -120,7 +123,7 @@ public class MainFragment extends Fragment implements OnSeekBarChangeListener, O
 		if (isBalanced) {
 			seekBarMainRight.setVisibility(View.GONE);
 			textViewLevelRight.setVisibility(View.GONE);
-			
+
 			currentLevelR = currentLevelL;
 			headphoneAmpControl.setLevel(currentLevelL, currentLevelR);
 			updateSeekbar(currentLevelL, currentLevelR);
@@ -133,7 +136,7 @@ public class MainFragment extends Fragment implements OnSeekBarChangeListener, O
 			updateSeekbar(currentLevelL, currentLevelR);
 			updateLabel(currentLevelL, currentLevelR);
 		}
-		
+
 	}
 
 	// Update seekbar progress
@@ -153,24 +156,24 @@ public class MainFragment extends Fragment implements OnSeekBarChangeListener, O
 		Intent service = new Intent(getActivity(), MainService.class);
 		getActivity().startService(service);
 	}
-	
+
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
-			boolean fromUser) {
+	                              boolean fromUser) {
 
 		// Manually update volume levels and textviews if the user manually moved the seekbar
 		if (fromUser) {
 			if (isBalanced) {
-				updateLabel(progress+minLevel, progress+minLevel);
+				updateLabel(progress + minLevel, progress + minLevel);
 				headphoneAmpControl.setLevel(progress + minLevel, progress + minLevel); // Comment for non-immediate level change. See onStopTrackingTouch().
 			} else {
 				switch (seekBar.getId()) {
 					case R.id.seekBar_main:
-						updateLabel(progress+minLevel, seekBarMainRight.getProgress()+minLevel);
+						updateLabel(progress + minLevel, seekBarMainRight.getProgress() + minLevel);
 						headphoneAmpControl.setLevel(progress + minLevel, seekBarMainRight.getProgress() + minLevel); // Comment for non-immediate level change. See onStopTrackingTouch().
 						break;
 					case R.id.seekBar_mainRight:
-						updateLabel(seekBarMain.getProgress()+minLevel, progress+minLevel);
+						updateLabel(seekBarMain.getProgress() + minLevel, progress + minLevel);
 						headphoneAmpControl.setLevel(seekBarMain.getProgress() + minLevel, progress + minLevel); // Comment for non-immediate level change. See onStopTrackingTouch().
 						break;
 				}
@@ -201,19 +204,19 @@ public class MainFragment extends Fragment implements OnSeekBarChangeListener, O
 	}
 
 	@Override
-	public void onPause () {
+	public void onPause() {
 		idleKillTimer.removeCallbacks(idleTimerRunnable);
-		
+
 		super.onPause();
 	}
 
 	// Runnable to kill activity after a specified delay time. Also see FINISH_DELAY
 	private class IdleTimer implements Runnable {
-		 @Override
-		 public void run() {
-			 if (getActivity() != null)
-				 getActivity().finish();  
-		 }
+		@Override
+		public void run() {
+			if (getActivity() != null)
+				getActivity().finish();
+		}
 	}
 
 	@Override
@@ -223,7 +226,7 @@ public class MainFragment extends Fragment implements OnSeekBarChangeListener, O
 		if (isChecked) {
 			sp.edit().putBoolean(MainActivity.CHECKBOX_BALANCE, true).commit();
 			isBalanced = true;
-			
+
 		} else {
 			sp.edit().putBoolean(MainActivity.CHECKBOX_BALANCE, false).commit();
 			isBalanced = false;
@@ -233,11 +236,11 @@ public class MainFragment extends Fragment implements OnSeekBarChangeListener, O
 		if (getActivity().getClass() == DialogActivity.class) {
 			resetTimer();
 		}
-		
+
 	}
 
 	// Reset idle kill timer
-	public void resetTimer(){
+	public void resetTimer() {
 		idleKillTimer.removeCallbacks(idleTimerRunnable);
 		idleKillTimer.postDelayed(idleTimerRunnable, FINISH_DELAY);
 	}

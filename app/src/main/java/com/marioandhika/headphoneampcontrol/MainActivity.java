@@ -20,13 +20,14 @@ import android.widget.TextView;
 /**
  * Preferences activity
  */
-public class MainActivity extends Activity implements OnCheckedChangeListener, OnSeekBarChangeListener{
+public class MainActivity extends Activity implements OnCheckedChangeListener, OnSeekBarChangeListener {
 
-	private CheckBox checkBoxToggleService;
 	private SharedPreferences sp;
 	private SharedPreferences.Editor spe;
-	
+
 	private MainFragment mainFragment;
+
+	// Views
 	private CheckBox checkBoxToggleSafety;
 	private CheckBox checkBoxVolumeButtonHack;
 	private SeekBar seekBarMinLevel;
@@ -40,6 +41,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	private CheckBox checkBoxMusicHack;
 	private CheckBox checkBoxVoiceCallHack;
 	private CheckBox checkBoxRingHack;
+	private CheckBox checkBoxToggleService;
 
 	/**
 	 * Minimum volume level accepted by the kernel
@@ -53,7 +55,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 
 	/**
 	 * Preference keys
- 	 */
+	 */
 	public static final String CHECKBOX_SERVICE_CHECKED = "checkbox_service_checked";
 	public static final String CHECKBOX_SAFETY_CHECKED = "checkbox_safety_checked";
 	public static final String SEEKBAR_MIN_LEVEL = "seekbar_min_level";
@@ -70,12 +72,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	 * Intent code to indicate toggling of volume hack to the main service
 	 */
 	public static final int TOGGLE_VOLUME_HACK = 9;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		// Get views and set view listeners
 		checkBoxToggleService = (CheckBox) findViewById(R.id.checkBox_toggleService);
 		checkBoxToggleSafety = (CheckBox) findViewById(R.id.checkBox_toggleSafetyLevel);
@@ -89,7 +91,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		checkBoxMusicHack.setOnCheckedChangeListener(this);
 		checkBoxVoiceCallHack.setOnCheckedChangeListener(this);
 		checkBoxRingHack.setOnCheckedChangeListener(this);
-		
+
 		seekBarMinLevel = (SeekBar) findViewById(R.id.seekBar_minLevel);
 		seekBarMaxLevel = (SeekBar) findViewById(R.id.seekBar_maxLevel);
 		seekBarSafetyLevel = (SeekBar) findViewById(R.id.seekBar_safetyLevel);
@@ -98,7 +100,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		seekBarMaxLevel.setOnSeekBarChangeListener(this);
 		seekBarSafetyLevel.setOnSeekBarChangeListener(this);
 		seekBarVolumeButtonHack.setOnSeekBarChangeListener(this);
-		
+
 		textViewMinLevel = (TextView) findViewById(R.id.textView_minLevel);
 		textViewMaxLevel = (TextView) findViewById(R.id.textView_maxLevel);
 		textViewSafetyLevel = (TextView) findViewById(R.id.textView_safetyLevel);
@@ -107,7 +109,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		// Initialize views based on preferences
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		spe = sp.edit();
-		
+
 		boolean isToggleServiceChecked = sp.getBoolean(CHECKBOX_SERVICE_CHECKED, false);
 		boolean isToggleSafetyChecked = sp.getBoolean(CHECKBOX_SAFETY_CHECKED, false);
 		boolean isVolumeButtonHackChecked = sp.getBoolean(CHECKBOX_VOLUME_BUTTON_HACK, false);
@@ -118,7 +120,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		boolean isMusicHackChecked = sp.getBoolean(CHECKBOX_MUSIC_HACK, false);
 		boolean isVoiceCallHackChecked = sp.getBoolean(CHECKBOX_VOICE_CALL_HACK, false);
 		boolean isRingHackChecked = sp.getBoolean(CHECKBOX_RING_HACK, false);
-		
+
 		checkBoxMusicHack.setChecked(isMusicHackChecked);
 		checkBoxVoiceCallHack.setChecked(isVoiceCallHackChecked);
 		checkBoxRingHack.setChecked(isRingHackChecked);
@@ -127,11 +129,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		checkBoxToggleService.setChecked(isToggleServiceChecked);
 		checkBoxToggleSafety.setChecked(isToggleSafetyChecked);
 		checkBoxToggleSafety.setEnabled(isToggleServiceChecked);
-		
+
 		checkBoxMusicHack.setEnabled(checkBoxToggleService.isChecked() && checkBoxVolumeButtonHack.isChecked());
 		checkBoxVoiceCallHack.setEnabled(checkBoxToggleService.isChecked() && checkBoxVolumeButtonHack.isChecked());
 		checkBoxRingHack.setEnabled(checkBoxToggleService.isChecked() && checkBoxVolumeButtonHack.isChecked());
-		
+
 		seekBarVolumeButtonHack.setProgress(hackLevelJump);
 		seekBarMaxLevel.setProgress(maxLevel);
 		seekBarMinLevel.setProgress(minLevel);
@@ -139,8 +141,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		textViewMinLevel.setText("Min level: " + minLevel);
 		textViewMaxLevel.setText("Max level: " + maxLevel);
 		textViewSafetyLevel.setText("Safety level: " + safetyLevel);
-		textViewVolumeButtonHack.setText("Amp level jump: " + (hackLevelJump+1));
-		
+		textViewVolumeButtonHack.setText("Amp level jump: " + (hackLevelJump + 1));
+
 		// Get main fragment
 		FragmentManager fm = getFragmentManager();
 		mainFragment = (MainFragment) fm.findFragmentById(R.id.main_fragment);
@@ -181,13 +183,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 
 	// Checks whether or not main service is currently running
 	private boolean isMyServiceRunning() {
-	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-	        if (MainService.class.getName().equals(service.service.getClassName())) {
-	            return true;
-	        }
-	    }
-	    return false;
+		ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+			if (MainService.class.getName().equals(service.service.getClassName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// Toggles volume safety feature
@@ -196,7 +198,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		// Update views
 		if (seekBarSafetyLevel.getProgress() > seekBarMaxLevel.getProgress()) {
 			seekBarSafetyLevel.setProgress(seekBarMaxLevel.getProgress());
-		} else 	if (seekBarSafetyLevel.getProgress() < seekBarMinLevel.getProgress()) {
+		} else if (seekBarSafetyLevel.getProgress() < seekBarMinLevel.getProgress()) {
 			seekBarSafetyLevel.setProgress(seekBarMinLevel.getProgress());
 		} else {
 			textViewSafetyLevel.setText("Safety level: " + seekBarSafetyLevel.getProgress());
@@ -209,7 +211,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		
+
 		switch (buttonView.getId()) {
 			case R.id.checkBox_toggleService:
 				toggleService(isChecked);
@@ -254,7 +256,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
-			boolean fromUser) {
+	                              boolean fromUser) {
 
 		// Handles seekbars' progress changes
 		switch (seekBar.getId()) {
@@ -282,14 +284,14 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				// Prevent safety level from being lower than min level, and higher than max level
 				if (progress > seekBarMaxLevel.getProgress()) {
 					seekBar.setProgress(seekBarMaxLevel.getProgress());
-				} else 	if (progress < seekBarMinLevel.getProgress()) {
+				} else if (progress < seekBarMinLevel.getProgress()) {
 					seekBar.setProgress(seekBarMinLevel.getProgress());
 				} else {
 					textViewSafetyLevel.setText("Safety level: " + progress);
 				}
 				break;
 			case R.id.seekBar_VolumeButtonHack:
-				textViewVolumeButtonHack.setText("Amp level jump: " + (progress+1));
+				textViewVolumeButtonHack.setText("Amp level jump: " + (progress + 1));
 				break;
 		}
 	}
@@ -328,9 +330,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				break;
 		}
 	}
-	
+
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 		mainFragment.rebuildSeekbar();
 	}
