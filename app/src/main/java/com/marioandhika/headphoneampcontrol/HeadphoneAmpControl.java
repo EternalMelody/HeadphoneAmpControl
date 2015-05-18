@@ -43,17 +43,21 @@ public class HeadphoneAmpControl extends Application {
 	/**
 	 * Current left level in memory
 	 */
-	private int currentLevelL;
+	private Integer currentLevelL;
 
 	/**
 	 * Current right level in memory
 	 */
-	private int currentLevelR;
+	private Integer currentLevelR;
 
 	/**
 	 * @return Gets current left level
 	 */
 	public int getCurrentLevelL() {
+		if (currentLevelL == null) {
+			getLevelsFromFile();
+		}
+
 		return currentLevelL;
 	}
 
@@ -61,6 +65,10 @@ public class HeadphoneAmpControl extends Application {
 	 * @return Gets current right level
 	 */
 	public int getCurrentLevelR() {
+		if (currentLevelR == null) {
+			getLevelsFromFile();
+		}
+
 		return currentLevelR;
 	}
 
@@ -68,8 +76,14 @@ public class HeadphoneAmpControl extends Application {
 	public void onCreate() {
 		super.onCreate();
 
-		fileL = new File(HeadphoneAmpControl.FILE_AMP_LEVEL_LEFT);
-		fileR = new File(HeadphoneAmpControl.FILE_AMP_LEVEL_RIGHT);
+		initFilesIfNecessary();
+	}
+
+	private void initFilesIfNecessary(){
+		if (fileL == null || fileR == null) {
+			fileL = new File(HeadphoneAmpControl.FILE_AMP_LEVEL_LEFT);
+			fileR = new File(HeadphoneAmpControl.FILE_AMP_LEVEL_RIGHT);
+		}
 	}
 
 	/**
@@ -79,26 +93,27 @@ public class HeadphoneAmpControl extends Application {
 	 * @param newLevelR New volume of right channel.
 	 */
 	public void setLevel(int newLevelL, int newLevelR) {
-		File mFile = new File(FILE_AMP_LEVEL_LEFT);
+
 		FileOutputStream mFos;
 		try {
-			mFos = new FileOutputStream(mFile);
+			mFos = new FileOutputStream(fileL);
 
 			byte[] bytesToWrite = String.valueOf(newLevelL).getBytes();
 			mFos.write(bytesToWrite);
+			mFos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		File mFileR = new File(FILE_AMP_LEVEL_RIGHT);
 		FileOutputStream mFosR;
 		try {
-			mFosR = new FileOutputStream(mFileR);
+			mFosR = new FileOutputStream(fileR);
 
 			byte[] bytesToWrite = String.valueOf(newLevelR).getBytes();
 			mFosR.write(bytesToWrite);
+			mFosR.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -110,6 +125,7 @@ public class HeadphoneAmpControl extends Application {
 	 * Fix file permissions for the volume level files
 	 */
 	private void fixPermissions() {
+		initFilesIfNecessary();
 		// Define terminal commands
 		String[] hin1 = {"su", "-c",
 				"chmod o+w " + FILE_AMP_LEVEL_LEFT,
@@ -130,7 +146,6 @@ public class HeadphoneAmpControl extends Application {
 	 * Get levels from the system files
 	 */
 	public void getLevelsFromFile() {
-
 		// Check permissions
 		if (!fileL.canWrite() || !fileR.canWrite()) {
 			fixPermissions();
