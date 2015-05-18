@@ -93,6 +93,10 @@ public class HeadphoneAmpControl extends Application {
 	 * @param newLevelR New volume of right channel.
 	 */
 	public void setLevel(int newLevelL, int newLevelR) {
+		// Check permissions
+		if (!fileL.canWrite() || !fileR.canWrite()) {
+			fixPermissions();
+		}
 
 		FileOutputStream mFos;
 		try {
